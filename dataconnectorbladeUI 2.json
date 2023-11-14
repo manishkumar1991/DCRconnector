@@ -1,0 +1,113 @@
+{
+    "id": "ZscalarAma",
+    "title": "Zscalar via AMA",
+    "publisher": "Zscalar",
+    "descriptionMarkdown": "The [Zscalar](https://claroty.com/) data connector provides the capability to ingest [Continuous Threat Detection](https://claroty.com/resources/datasheets/continuous-threat-detection) and [Secure Remote Access](https://claroty.com/secure-remote-access/) events into Microsoft Sentinel.",
+    "additionalRequirementBanner": "This data connector depends on a parser based on a Kusto Function to work as expected [**ZscalarEvent**](https://aka.ms/sentinel-claroty-parser) which is deployed with the Microsoft Sentinel Solution.",
+    "graphQueries": [
+        {
+            "metricName": "Total data received",
+            "legend": "Zscalar",
+            "baseQuery": "CommonSecurityLog\n |where DeviceVendor =~ 'claroty'\n  |extend sent_by_ama = column_ifexists('CollectorHostName','')\n |where isnotempty(sent_by_ama)"
+        }
+    ],
+    "sampleQueries": [
+        {
+            "description" : "Top 10 Destinations",
+            "query": "ZscalarEvent\n | where isnotempty(DstIpAddr)\n    | summarize count() by DstIpAddr\n | top 10 by count_"
+        }
+    ],
+    "dataTypes": [
+        {
+            "name": "CommonSecurityLog (Zscalar)",
+            "lastDataReceivedQuery": "CommonSecurityLog\n |where DeviceVendor =~ 'claroty'\n  |extend sent_by_ama = column_ifexists('CollectorHostName','')\n |where isnotempty(sent_by_ama)\n            | summarize Time = max(TimeGenerated)\n            | where isnotempty(Time)"
+        }
+    ],
+    "connectivityCriterias": [
+        {
+            "type": "IsConnectedQuery",
+            "value": [
+                "CommonSecurityLog\n |where DeviceVendor =~ 'claroty'\n  |extend sent_by_ama = column_ifexists('CollectorHostName','')\n |where isnotempty(sent_by_ama)\n | summarize LastLogReceived = max(TimeGenerated)\n | project IsConnected = LastLogReceived > ago(30d)"
+            ]
+        }
+    ],
+    "availability": {
+        "status": 1,
+        "isPreview": false
+    },
+    "permissions":  {
+        "resourceProvider": [
+            {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "read and write permissions are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                    "read": true,
+                    "write": true,
+                    "delete": true
+                }
+            }
+        ],
+		    "customs": [
+      {
+        "description": "To collect data from non-Azure VMs, they must have Azure Arc installed and enabled. [Learn more](https://docs.microsoft.com/azure/azure-monitor/agents/azure-monitor-agent-install?tabs=ARMAgentPowerShell,PowerShellWindows,PowerShellWindowsArc,CLIWindows,CLIWindowsArc)"
+      },
+      {
+        "description": "Common Event Format (CEF) via AMA and Syslog via AMA data connectors must be installed [Learn more](https://learn.microsoft.com/azure/sentinel/connect-cef-ama#open-the-connector-page-and-create-the-dcr)"
+      }	  
+    ]
+    },
+    "instructionSteps": [
+        { 
+            "title": "", 
+            "description": ">**NOTE:** This data connector depends on a parser based on a Kusto Function to work as expected [**ZscalarEvent**](https://aka.ms/sentinel-claroty-parser) which is deployed with the Microsoft Sentinel Solution.",
+            "instructions": [
+                {
+                    "parameters": {
+                        "title": "1. Kindly follow the steps to configure the data connector",
+                        "instructionSteps": [
+                            {
+                                "title": "Step A. Configure Data Connector to collect logs from Zscalar",
+                                "description": "_Note:- CEF logs are collected only from Linux Agents_\n\n1. Click the **Deploy to Azure** button below.\n\n\t[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmanishkumar1991%2Fazuretest%2Fmain%2Fdataconnectormaintemplate.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fmanishkumar1991%2Fazuretest%2Fmain%2Fcreateui_main.json) \n\n2. Fill in the required details.\n\n3. Click on **review + submit**",
+                                "instructions": [									
+									{
+										"parameters": {
+										"label": "Run the following command to install and apply the CEF collector:",
+										"value": "sudo wget -O Forwarder_AMA_installer.py https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/Syslog/Forwarder_AMA_installer.py&&sudo python Forwarder_AMA_installer.py"
+										},
+										"type": "CopyableLabel"
+									}
+                                ]
+                            },
+                            {
+                                "title": "Step B. Configure Zscalar to send logs using CEF",
+                                "description": "Configure log forwarding using CEF:\n\n1. Navigate to the **Syslog** section of the Configuration menu.\n\n2. Select **+Add**.\n\n3. In the **Add New Syslog Dialog** specify Remote Server **IP**, **Port**, **Protocol** and select **Message Format** - **CEF**.\n\n4. Choose **Save** to exit the **Add Syslog dialog**.",
+                                "instructions": [
+                                ]
+                            },
+							{
+								"title": "Step C. Validate connection",
+								"description": "Follow the instructions to validate your connectivity:\n\nOpen Log Analytics to check if the logs are received using the CommonSecurityLog schema.\n\nIt may take about 20 minutes until the connection streams data to your workspace.\n\nIf the logs are not received, run the following connectivity validation script:\n\n 1. Make sure that you have Python on your machine using the following command: python -version\n\n2. You must have elevated permissions (sudo) on your machine",
+								"instructions": [
+									{
+										"parameters": {
+										"label": "Run the following command to validate your connectivity:",
+										"value": "sudo wget -O Sentinel_AMA_troubleshoot.py https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/Syslog/Sentinel_AMA_troubleshoot.py&&sudo python Sentinel_AMA_troubleshoot.py --cef"
+										},
+										"type": "CopyableLabel"
+									}
+								]
+							}							
+                        ]
+                    },
+                    "type": "InstructionStepsGroup"
+                }
+            ]    
+        },
+        {
+            "title": "2. Secure your machine ",
+            "description": "Make sure to configure the machine's security according to your organization's security policy\n\n\n[Learn more >](https://aka.ms/SecureCEF)"
+        }
+          ]       
+      }
