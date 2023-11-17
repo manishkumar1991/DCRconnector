@@ -6,7 +6,7 @@
         "config": {
             "isWizard": false,
             "basics": {
-                "description": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Workbooks/Images/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">\n\nThis data connector helps to ingest data from **Claroty**",
+                "description": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Workbooks/Images/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">\n\nThis data connector helps to ingest data from **solution-name**",
                 "subscription": {
                     "resourceProviders": [
                         "Microsoft.Insights/dataCollectionRules",
@@ -982,7 +982,7 @@
 							{
   "name": "tempblock",
   "type": "Microsoft.Common.TextBlock",
-  "visible": true,
+  "visible": false,
   "options": {
     "text": "[concat(steps('DCR Creation').CollectSection.facility1,' ',steps('DCR Creation').CollectSection.facility2,' ',steps('DCR Creation').CollectSection.facility3,' ',steps('DCR Creation').CollectSection.facility4,' ',steps('DCR Creation').CollectSection.facility5,' ',steps('DCR Creation').CollectSection.facility6,' ',steps('DCR Creation').CollectSection.facility7,' ',steps('DCR Creation').CollectSection.facility8,' ',steps('DCR Creation').CollectSection.facility9,' ',steps('DCR Creation').CollectSection.facility10,' ',steps('DCR Creation').CollectSection.facility11,' ',steps('DCR Creation').CollectSection.facility12,' ',steps('DCR Creation').CollectSection.facility13,' ',steps('DCR Creation').CollectSection.facility14,' ',steps('DCR Creation').CollectSection.facility16,' ',steps('DCR Creation').CollectSection.facility17,' ',steps('DCR Creation').CollectSection.facility18)]"
 	
@@ -1041,13 +1041,13 @@
                                 "type": "Microsoft.Common.DropDown",
                                 "label": "DCR for Raw Data Ingestion",
                                 "placeholder": "",
-                                "defaultValue": "[concat('ms-sentinel-Zscalar-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
+                                "defaultValue": "[concat('ms-sentinel-solutionname-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
                                 "toolTip": "Showing just for your reference only and don't edit this",
                                 "constraints": {
                                     "allowedValues": [
                                         {
-                                            "label": "[concat('ms-sentinel-Zscalar-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
-                                            "value": "[concat('ms-sentinel-Zscalar-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]"
+                                            "label": "[concat('ms-sentinel-solutionname-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
+                                            "value": "[concat('ms-sentinel-solutionname-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]"
                                         }
                                     ],
                                     "required": false
@@ -1057,10 +1057,10 @@
                             {
                                 "name": "DCRAlreadyExistsforRawData",
                                 "type": "Microsoft.Common.InfoBox",
-                                "visible": "[and(steps('Data Ingestion Config').dataingestionsection.flag-raw-copy-normdata,not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-Zscalar-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location))))))))]",
+                                "visible": "[and(steps('Data Ingestion Config').dataingestionsection.flag-raw-copy-normdata,not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-solutionname-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location))))))))]",
                                 "options": {
                                     "icon": "Info",
-                                    "text": "You already have DCR  <b> ms-sentinel-Zscalar-rawdata-dcr-[la region]  </b> with the above name in your environment. Select below if you want to refresh."
+                                    "text": "You already have DCR  <b> ms-sentinel-solutionname-rawdata-dcr-[la region]  </b> with the above name in your environment. Select below if you want to refresh."
                                 }
                             },
                             {
@@ -1071,20 +1071,20 @@
                                 "constraints": {
                                     "required": false
                                 },
-                                "visible": "[and(steps('Data Ingestion Config').dataingestionsection.flag-raw-copy-normdata,not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-Zscalar-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location))))))))]"
+                                "visible": "[and(steps('Data Ingestion Config').dataingestionsection.flag-raw-copy-normdata,not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-solutionname-rawdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location))))))))]"
                             },
                             {
                                 "name": "dcr-normalized-data_name_input",
                                 "type": "Microsoft.Common.DropDown",
                                 "label": "DCR for Normalized Data Ingestion",
                                 "placeholder": "",
-                                "defaultValue": "[concat('ms-sentinel-Zscalar-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
+                                "defaultValue": "[concat('ms-sentinel-solutionname-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
                                 "toolTip": "Showing just for your reference only and don't edit this",
                                 "constraints": {
                                     "allowedValues": [
                                         {
-                                            "label": "[concat('ms-sentinel-Zscalar-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
-                                            "value": "[concat('ms-sentinel-Zscalar-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]"
+                                            "label": "[concat('ms-sentinel-solutionname-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]",
+                                            "value": "[concat('ms-sentinel-solutionname-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))]"
                                         }
                                     ],
                                     "required": true
@@ -1094,10 +1094,10 @@
                             {
                                 "name": "DCRAlreadyExistsforNormData",
                                 "type": "Microsoft.Common.InfoBox",
-                                "visible": "[not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-Zscalar-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))))))]",
+                                "visible": "[not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-solutionname-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))))))]",
                                 "options": {
                                     "icon": "Info",
-                                    "text": "You already have DCR <b> ms-sentinel-Zscalar-normdata-dcr-[la region] </b> with the above name in your environment. Select below if you want to refresh."
+                                    "text": "You already have DCR <b> ms-sentinel-solutionname-normdata-dcr-[la region] </b> with the above name in your environment. Select below if you want to refresh."
                                 }
                             },
                             {
@@ -1108,7 +1108,7 @@
                                 "constraints": {
                                     "required": false
                                 },
-                                "visible": "[not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-Zscalar-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))))))]"
+                                "visible": "[not(empty(filter(steps('Data Ingestion Config').dataingestionsection.getexistingDCRs.value, (item) => contains(item.name,concat('ms-sentinel-solutionname-normdata-dcr-',first(map(filter(basics('getLAWorkspace').value, (filter) => equals(filter.name,basics('loganalyticsworkspace'))), (item) => item.location)))))))]"
                             }
                         ]
                     },
@@ -1116,32 +1116,7 @@
                         "name": "dataingestionsection3",
                         "type": "Microsoft.Common.Section",
                         "label": "Following Normalizations are installed with this DCR rule",
-                        "elements": [
-                            {
-                                "name": "text3",
-                                "type": "Microsoft.Common.TextBlock",
-                                "visible": true,
-                                "options": {
-                                    "text": "● Zscalar - Network session normalization"
-                                }
-                            },
-                            {
-                                "name": "text4",
-                                "type": "Microsoft.Common.TextBlock",
-                                "visible": true,
-                                "options": {
-                                    "text": "● Zscalar - Web session normalization"
-                                }
-                            },
-                            {
-                                "name": "text5",
-                                "type": "Microsoft.Common.TextBlock",
-                                "visible": true,
-                                "options": {
-                                    "text": "● Zscalar - DNS Activity normalization"
-                                }
-                            }
-                        ]
+                        "elements": ["normalizationtechnique"]
                     }
                 ]
             }
