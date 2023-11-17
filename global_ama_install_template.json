@@ -1,0 +1,55 @@
+{
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Compute/virtualMachines/extensions",
+                            "apiVersion": "2021-11-01",
+                            "name": "[format('{0}/AzureMonitorWindowsAgent', parameters('VM Name'))]",
+                            "location": "[parameters('VM Location')]",
+                            "properties": {
+                                "publisher": "Microsoft.Azure.Monitor",
+                                "type": "AzureMonitorWindowsAgent",
+                                "typeHandlerVersion": "1.18",
+                                "enableAutomaticUpgrade": true
+                            },
+                            "condition": "[and(equals(parameters('VM Type'),'Windows'),equals(parameters('Is Machine ARC Enabled'),'False'))]"
+                        },
+                        {
+                            "type": "Microsoft.Compute/virtualMachines/extensions",
+                            "apiVersion": "2021-11-01",
+                            "name": "[format('{0}/AzureMonitorLinuxAgent', parameters('VM Name'))]",
+                            "location": "[parameters('VM Location')]",
+                            "properties": {
+                                "publisher": "Microsoft.Azure.Monitor",
+                                "type": "AzureMonitorLinuxAgent",
+                                "typeHandlerVersion": "1.27",
+                                "enableAutomaticUpgrade": true
+                            },
+                            "condition": "[and(equals(parameters('VM Type'),'Linux'),equals(parameters('Is Machine ARC Enabled'),'False'))]"
+                        },
+                        {
+                            "type": "Microsoft.HybridCompute/machines/extensions",
+                            "apiVersion": "2021-12-10-preview",
+                            "name": "[format('{0}/AzureMonitorWindowsAgent', parameters('VM Name'))]",
+                            "location": "[parameters('VM Location')]",
+                            "properties": {
+                                "publisher": "Microsoft.Azure.Monitor",
+                                "type": "AzureMonitorWindowsAgent"
+                            },
+                            "condition": "[and(equals(parameters('VM Type'),'Windows'),equals(parameters('Is Machine ARC Enabled'),'True'))]"
+                        },
+                        {
+                            "type": "Microsoft.HybridCompute/machines/extensions",
+                            "apiVersion": "2021-12-10-preview",
+                            "name": "[format('{0}/AzureMonitorLinuxAgent', parameters('VM Name'))]",
+                            "location": "[parameters('VM Location')]",
+                            "properties": {
+                                "publisher": "Microsoft.Azure.Monitor",
+                                "type": "AzureMonitorLinuxAgent"
+                            },
+                            "condition": "[and(equals(parameters('VM Type'),'Linux'),equals(parameters('Is Machine ARC Enabled'),'True'))]"
+                        }
+                    ]
+                }
