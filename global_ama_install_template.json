@@ -1,7 +1,37 @@
 {
                     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
-                    "parameters": {},
+                    "parameters": {
+                      "VM Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter Virtual machine name on which AMA agent needs to be installed"
+            }
+        },
+        "VM Location": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter Virtual Machine location"
+            }
+        },
+        "VM Type": {
+            "type": "string",
+            "allowedValues": [
+                "Windows",
+                "Linux"
+            ]
+        },
+        "Is Machine ARC Enabled": {
+            "type": "string",
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "metadata": {
+                "description": "Please select true if it is a Non azure machine and has ARC agent installed"
+            }
+        }
+                    },
                     "resources": [
                         {
                             "type": "Microsoft.Compute/virtualMachines/extensions",
