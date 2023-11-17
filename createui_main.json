@@ -6,7 +6,7 @@
         "config": {
             "isWizard": false,
             "basics": {
-                "description": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Workbooks/Images/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">\n\nThis data connector helps to ingest data from **solution-name**",
+                "description": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Workbooks/Images/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">\n\nThis data connector helps to ingest data from **solutionname**",
                 "subscription": {
                     "resourceProviders": [
                         "Microsoft.Insights/dataCollectionRules",
