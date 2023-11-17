@@ -96,60 +96,22 @@
             "subscriptionId": "[parameters('VM Subscription ID')]",
             "properties": {
                 "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "resources": [
-                        {
-                            "type": "Microsoft.Compute/virtualMachines/extensions",
-                            "apiVersion": "2021-11-01",
-                            "name": "[format('{0}/AzureMonitorWindowsAgent', parameters('VM Name'))]",
-                            "location": "[parameters('VM Location')]",
-                            "properties": {
-                                "publisher": "Microsoft.Azure.Monitor",
-                                "type": "AzureMonitorWindowsAgent",
-                                "typeHandlerVersion": "1.18",
-                                "enableAutomaticUpgrade": true
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Windows'),equals(parameters('Is Machine ARC Enabled'),'False'))]"
-                        },
-                        {
-                            "type": "Microsoft.Compute/virtualMachines/extensions",
-                            "apiVersion": "2021-11-01",
-                            "name": "[format('{0}/AzureMonitorLinuxAgent', parameters('VM Name'))]",
-                            "location": "[parameters('VM Location')]",
-                            "properties": {
-                                "publisher": "Microsoft.Azure.Monitor",
-                                "type": "AzureMonitorLinuxAgent",
-                                "typeHandlerVersion": "1.27",
-                                "enableAutomaticUpgrade": true
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Linux'),equals(parameters('Is Machine ARC Enabled'),'False'))]"
-                        },
-                        {
-                            "type": "Microsoft.HybridCompute/machines/extensions",
-                            "apiVersion": "2021-12-10-preview",
-                            "name": "[format('{0}/AzureMonitorWindowsAgent', parameters('VM Name'))]",
-                            "location": "[parameters('VM Location')]",
-                            "properties": {
-                                "publisher": "Microsoft.Azure.Monitor",
-                                "type": "AzureMonitorWindowsAgent"
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Windows'),equals(parameters('Is Machine ARC Enabled'),'True'))]"
-                        },
-                        {
-                            "type": "Microsoft.HybridCompute/machines/extensions",
-                            "apiVersion": "2021-12-10-preview",
-                            "name": "[format('{0}/AzureMonitorLinuxAgent', parameters('VM Name'))]",
-                            "location": "[parameters('VM Location')]",
-                            "properties": {
-                                "publisher": "Microsoft.Azure.Monitor",
-                                "type": "AzureMonitorLinuxAgent"
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Linux'),equals(parameters('Is Machine ARC Enabled'),'True'))]"
-                        }
-                    ]
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/manishkumar1991/DCRconnector/main/global_ama_install_template.json"
+                },
+                "parameters": {
+                    "VM Name": {
+                        "value": "[parameters('VM Name')]"
+                    },
+                    "VM Type": {
+                        "value": "[parameters('VM Type')]"
+                    },
+                    "Is Machine ARC Enabled": {
+                        "value": "[parameters('Is Machine ARC Enabled')]"
+                    },
+                    "VM Location": {
+                        "value": "[parameters('VM Location')]"
+                    }
                 }
             }
 
@@ -205,71 +167,31 @@
             "subscriptionId": "[parameters('VM Subscription ID')]",
             "properties": {
                 "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "resources": [
-                        {
-                            "type": "Microsoft.Insights/dataCollectionRuleAssociations",
-                            "apiVersion": "2021-09-01-preview",
-                            "scope": "[format('Microsoft.Compute/virtualMachines/{0}', parameters('VM Name'))]",
-                            "name": "[concat(parameters('DCR Name'),parameters('VM Name'))]",
-                            "properties": {
-                                "description": "Association of data collection rule. Deleting this association will break the data collection for this virtual machine.",
-                                "dataCollectionRuleId": "[resourceId(parameters('loganalyticsworkspace-subscription'), parameters('loganalyticsworkspace-resourceGroup'), 'microsoft.insights/datacollectionrules', parameters('DCR Name'))]"
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Linux'),equals(parameters('Is Machine ARC Enabled'),'False'))]"
-
-
-                        },
-
-
-                        {
-                            "type": "Microsoft.Insights/dataCollectionRuleAssociations",
-                            "apiVersion": "2021-09-01-preview",
-                            "scope": "[format('Microsoft.HybridCompute/machines/{0}', parameters('VM Name'))]",
-                            "name": "[concat(parameters('DCR Name'),parameters('VM Name'))]",
-                            "properties": {
-                                "description": "Association of data collection rule. Deleting this association will break the data collection for this Arc server.",
-                                "dataCollectionRuleId": "[resourceId(parameters('loganalyticsworkspace-subscription'), parameters('loganalyticsworkspace-resourceGroup'), 'microsoft.insights/datacollectionrules', parameters('DCR Name'))]"
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Linux'),equals(parameters('Is Machine ARC Enabled'),'True'))]"
-
-                        },
-                        {
-                            "type": "Microsoft.Insights/dataCollectionRuleAssociations",
-                            "apiVersion": "2021-09-01-preview",
-                            "scope": "[format('Microsoft.Compute/virtualMachines/{0}', parameters('VM Name'))]",
-                            "name": "[concat(parameters('DCR Name'),parameters('VM Name'))]",
-                            "properties": {
-                                "description": "Association of data collection rule. Deleting this association will break the data collection for this virtual machine.",
-                                "dataCollectionRuleId": "[resourceId(parameters('loganalyticsworkspace-subscription'), parameters('loganalyticsworkspace-resourceGroup'), 'microsoft.insights/datacollectionrules', parameters('DCR Name'))]"
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Windows'),equals(parameters('Is Machine ARC Enabled'),'False'))]"
-
-
-                        },
-
-
-                        {
-                            "type": "Microsoft.Insights/dataCollectionRuleAssociations",
-                            "apiVersion": "2021-09-01-preview",
-                            "scope": "[format('Microsoft.HybridCompute/machines/{0}', parameters('VM Name'))]",
-                            "name": "[concat(parameters('DCR Name'),parameters('VM Name'))]",
-                            "properties": {
-                                "description": "Association of data collection rule. Deleting this association will break the data collection for this Arc server.",
-                                "dataCollectionRuleId": "[resourceId(parameters('loganalyticsworkspace-subscription'), parameters('loganalyticsworkspace-resourceGroup'), 'microsoft.insights/datacollectionrules', parameters('DCR Name'))]"
-                            },
-                            "condition": "[and(equals(parameters('VM Type'),'Windows'),equals(parameters('Is Machine ARC Enabled'),'True'))]"
-
-                        }
-                    ]
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/manishkumar1991/DCRconnector/main/global_DCRruleAssosiation_template.json"
+                },
+                "parameters": {
+                    "DCR Name": {
+                        "value": "[parameters('DCR Name')]"
+                    },
+                    "VM Name": {
+                        "value": "[parameters('VM Name')]"
+                    },
+                    "loganalyticsworkspace-subscription": {
+                        "value": "[parameters('loganalyticsworkspace-subscription')]"
+                    },
+                    "loganalyticsworkspace-resourceGroup": {
+                        "value": "[parameters('loganalyticsworkspace-resourceGroup')]"
+                    },
+                    "VM Type": {
+                        "value": "[parameters('VM Type')]"
+                    },
+                    "Is Machine ARC Enabled": {
+                        "value": "[parameters('Is Machine ARC Enabled')]"
+                    }
                 }
             }
 
         }
-
-
     ]
 }
